@@ -81,12 +81,12 @@ for t = 1:30
 end
 %%
 figure
-t = 5;
+t = 20;
 for e = 1:10
     [x,y,z]=sphere(t);
     %surf(x,y,z)
     T=[1          0   0;
-       1+0.1*e  1   0;
+       1+0.1*e   1   0;
        0          0   1];
     for i=1:t+1
             for j=1:t+1
@@ -102,6 +102,75 @@ for e = 1:10
 %    figure
     surf(x1,y1,z1)
     axis equal
-    
+    axis([-1 1 -2.5 2.5 -1 1]);
+    %view(100,30)
     pause(0.2)
 end
+
+%% 三维旋转
+for i=-2*pi:0.5:2*pi
+    R=[cos(i) sin(i) 0;-sin(i) cos(i) 0;0 0 1];
+    R=[0 cos(i) sin(i) ;0 -sin(i) cos(i) ;1 0 0];
+    R=[cos(i) 0 sin(i) ;-sin(i)  0 cos(i) ;0 1 0];
+    vert=[1 1 1;1 2 1;2 2 1;2 1 1;1 1 2;1 2 2;2 2 2;2 1 2];
+    vert=vert*R;
+    fac=[1 2 3 4;2 6 7 3;4 3 7 8;1 5 8 4;1 2 6 5;5 6 7 8];
+    pause(0.1)
+    patch('faces',fac,'vertices',vert,'FaceVertexCData',hsv(8),'Facecolor','interp');
+    view(3);
+end
+
+%% 透视投影和平行投影
+figure
+vert=[1 1 1;1 2 1;2 2 1;2 1 1;1 1 2;1 2 2;2 2 2;2 1 2];
+fac=[1 2 3 4;2 6 7 3;4 3 7 8;1 5 8 4;1 2 6 5;5 6 7 8];
+subplot(1,2,1)
+view(3);
+patch('faces',fac,'vertices',vert,'Facecolor','w');
+axis equal;
+subplot(1,2,2)
+view(3);
+camproj('perspective')
+patch('faces',fac,'vertices',vert,'Facecolor','w');
+axis equal;
+%%
+figure
+z=ones(2,5);
+subplot(2,2,1);
+bar3(z)
+axis equal;
+subplot(2,2,2);
+bar3(z)
+axis equal;
+view(-30,15)
+subplot(2,2,3);
+bar3(z)
+axis equal;
+view(0,0)
+subplot(2,2,4);
+bar3(z)
+axis equal;
+view(45,-30)
+%%
+figure
+surf(peaks)
+axis vis3d off
+for x = -200:5:200
+    campos([x,10,10])
+drawnow
+pause(0.1)
+end
+%%
+figure
+vert=10*[1 1 1;1 2 1;2 2 1;2 1 1;1 1 2;1 2 2;2 2 2;2 1 2];
+fac=[1 2 3 4;2 6 7 3;4 3 7 8;1 5 8 4;1 2 6 5;5 6 7 8];
+view(3);
+camproj('perspective')
+patch('faces',fac,'vertices',vert,'Facecolor','w');
+axis vis3d off
+for x = -200:5:200
+    campos([x,100,50])
+drawnow
+pause(0.1)
+end
+
